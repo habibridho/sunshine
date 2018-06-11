@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 import java.io.IOException
@@ -45,7 +46,22 @@ class MainActivity : AppCompatActivity() {
         GithubQueryTask().execute(url)
     }
 
+    fun showJSONDataView() {
+        errorMessageText.visibility = View.INVISIBLE
+        resultTextView.visibility = View.VISIBLE
+    }
+
+    fun showErrorMessage() {
+        errorMessageText.visibility = View.VISIBLE
+        resultTextView.visibility = View.INVISIBLE
+    }
+
     inner class GithubQueryTask: AsyncTask<URL, Void, String?>() {
+        override fun onPreExecute() {
+            super.onPreExecute()
+            loadingIndicator.visibility = View.VISIBLE
+        }
+
         override fun doInBackground(vararg url: URL): String? {
             val searchUrl: URL = url[0]
             var githubSearchResults: String? = ""
@@ -53,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             try {
                 githubSearchResults = netUtils.getResponseFromHttpUrl(searchUrl)
             } catch (e: IOException) {
-                toast("Could not make an http call")
                 e.printStackTrace()
             }
 
@@ -61,10 +76,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onPostExecute(result: String?) {
-            result?.let {
-                if (!it.equals("")) {
-                    resultTextView.text = it
-                }
+            loadingIndicator.visibility = View.INVISIBLE
+            if (result == null || result.equals("")) {
+                showErrorMessage()
+            } else {
+                resultTextView.text = result
+                showJSONDataView()
             }
         }
     }
