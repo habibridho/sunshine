@@ -32,18 +32,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.search_button) {
-            makeGithubSearchQuery()
+            makeSearchQuery()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    fun makeGithubSearchQuery() {
+    fun makeSearchQuery() {
         val query = searchEditText.text.toString()
-        val url = netUtils.buildGithubSearchUrl(query)
+        val url = netUtils.buildSearchUrl(query)
         urlTextView.text = url.toString()
 
-        GithubQueryTask().execute(url)
+        QueryTask().execute(url)
     }
 
     fun showJSONDataView() {
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         resultTextView.visibility = View.INVISIBLE
     }
 
-    inner class GithubQueryTask: AsyncTask<URL, Void, String?>() {
+    inner class QueryTask: AsyncTask<URL, Void, String?>() {
         override fun onPreExecute() {
             super.onPreExecute()
             loadingIndicator.visibility = View.VISIBLE

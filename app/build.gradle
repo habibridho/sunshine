@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+ext {
+    anko_version = '0.10.5'
+}
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -15,15 +19,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField('String', 'OPEN_WEATHER_API_KEY', '\"' + System.getenv('OPEN_WEATHER_API_KEY') + '\"')
+        }
         release {
+            buildConfigField('String', 'OPEN_WEATHER_API_KEY', '\"' + System.getenv('OPEN_WEATHER_API_KEY') + '\"')
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-ext {
-    anko_version = '0.10.5'
 }
 
 dependencies {

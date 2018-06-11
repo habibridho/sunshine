@@ -1,6 +1,8 @@
 package com.habibridho.sunshine
 
+import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
@@ -9,16 +11,16 @@ import java.util.*
 
 class NetworkUtils() {
     companion object {
-        val GITHUB_SEARCH_URL = "https://api.github.com/search/repositories"
-        val GITHUB_QUERY_PARAM = "q"
-        val GITHUB_SORT_PARAM = "sort"
+        val OPEN_WEATHER_SEARCH_URL = "https://api.openweathermap.org/data/2.5/weather"
+        val OPEN_WEATHER_QUERY_PARAM = "q"
+        val OPEN_WEATHER_APP_KEY_PARAM = "APPID"
     }
 
     @Throws(MalformedURLException::class)
-    fun buildGithubSearchUrl(query: String): URL {
-        val uri = Uri.parse(GITHUB_SEARCH_URL).buildUpon()
-                .appendQueryParameter(GITHUB_QUERY_PARAM, query)
-                .appendQueryParameter(GITHUB_SORT_PARAM, "stars")
+    fun buildSearchUrl(query: String): URL {
+        val uri = Uri.parse(OPEN_WEATHER_SEARCH_URL).buildUpon()
+                .appendQueryParameter(OPEN_WEATHER_QUERY_PARAM, query)
+                .appendQueryParameter(OPEN_WEATHER_APP_KEY_PARAM, BuildConfig.OPEN_WEATHER_API_KEY)
                 .build()
 
         return URL(uri.toString())
