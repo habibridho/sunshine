@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.toast
 import java.io.IOException
 import java.net.URL
 
@@ -31,11 +30,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.search_button) {
-            makeSearchQuery()
+        when(item?.itemId) {
+            R.id.search_button -> makeSearchQuery()
+            R.id.refresh_button -> clearSearch()
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    fun clearSearch() {
+        urlTextView.text = ""
+        resultTextView.text = ""
     }
 
     fun makeSearchQuery() {
