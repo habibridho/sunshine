@@ -1,5 +1,6 @@
 package com.habibridho.sunshine
 
+import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +8,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 import java.io.IOException
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private lateinit var netUtils: NetworkUtils
@@ -40,11 +42,30 @@ class MainActivity : AppCompatActivity() {
         val url = netUtils.buildGithubSearchUrl(query)
         urlTextView.text = url.toString()
 
-        try {
-            val githubSearchResults = netUtils.getResponseFromHttpUrl(url)
-            resultTextView.text = githubSearchResults
-        } catch (e: IOException) {
-            toast("Could not make http call")
+        GithubQueryTask().execute(url)
+    }
+
+    inner class GithubQueryTask: AsyncTask<URL, Void, String?>() {
+        override fun doInBackground(vararg url: URL): String? {
+            val searchUrl: URL = url[0]
+            var githubSearchResults: String? = ""
+
+            try {
+                githubSearchResults = netUtils.getResponseFromHttpUrl(searchUrl)
+            } catch (e: IOException) {
+                toast("Could not make an http call")
+                e.printStackTrace()
+            }
+
+            return githubSearchResults
+        }
+
+        override fun onPostExecute(result: String?) {
+            result?.let {
+                if (!it.equals("")) {
+                    resultTextView.text = it
+                }
+            }
         }
     }
 }
